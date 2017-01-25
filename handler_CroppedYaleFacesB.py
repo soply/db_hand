@@ -197,8 +197,8 @@ def read_subject_all(nr_subject, scale=1.0, datashape="columns",
     Example
     -------------
     In [3]: data = read_subject_all(1, datashape = "columns", datatype = "float")
-    In [4]: data.shape
-    Out[4]: (32256, 64)
+            # data[1] contains (n_pixel, n_images) matrix with all images related
+            # to subject 1
     """
     nr_subject = str(nr_subject).zfill(2)
     files = glob.glob('CroppedYaleFaces/yaleB{0}/*.pgm'.format(nr_subject))
