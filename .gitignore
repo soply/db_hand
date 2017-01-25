@@ -1,0 +1,4 @@
+*.pyc
+
+# Data sets
+CroppedYaleFaces
