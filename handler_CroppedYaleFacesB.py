@@ -195,7 +195,9 @@ def read_subject_all(nr_subject, scale=1.0, datashape="columns",
     Returns the data object containing all images of the respective subject.
     Note that the ambient image of the database is left out. Moreover, the
     representation/shape of the returned object depends on the chosen datashape.
-
+    Moreover, returns the image format ie. a tuple with (pixel_x, pixel_y) to
+    be able to recover the image from columnvectors.
+    
     Example
     -------------
     In [3]: data = read_subject_all(1, datashape = "columns", datatype = "float")
@@ -208,6 +210,8 @@ def read_subject_all(nr_subject, scale=1.0, datashape="columns",
     files = [item for item in files if "Ambient" not in item]
     # Get first image for extracting data format
     I = read_single_filename(files[0], scale, datatype)
+    # Get image format
+    image_format = I.shape
     if datashape == "matrices":
         data = np.zeros((len(files), I.shape[0], I.shape[1]))
         for i, fn in enumerate(files):
@@ -216,10 +220,11 @@ def read_subject_all(nr_subject, scale=1.0, datashape="columns",
         data = np.zeros((I.shape[0] * I.shape[1], len(files)))
         for i, fn in enumerate(files):
             data[:, i] = read_single_filename(fn, scale, datatype).ravel()
-    return data
+    return data, image_format
 
 
-def read_all(scale=1.0, datashape="columns", datatype="float"):
+def read_all(scale=1.0, datashape="columns", datatype="float",
+             until_subject = 100):
     """ Reads and returns all images of the database. Format of returned
     python dict depends on the input datashape.
 
@@ -243,6 +248,11 @@ def read_all(scale=1.0, datashape="columns", datatype="float"):
         unchanged. If datatype is "float" the images will converted to floating
         point values in [0,1].
 
+    until_subject : Integer
+        Can be used as an upper boundary for subjects considered. Note that this
+        does not have an effect if it exceeds the number of faces in the
+        data base.
+
     Returns
     -------------
     Returns the data object containing all images of the database.
@@ -259,7 +269,8 @@ def read_all(scale=1.0, datashape="columns", datatype="float"):
     retr = {}
     counter = 1
     print "Loading database..."
-    while os.path.isdir(basepath+"/CroppedYaleFaces/yaleB{0}".format(str(counter).zfill(2))):
+    while os.path.isdir(basepath+"/CroppedYaleFaces/yaleB{0}".format(
+            str(counter).zfill(2))) and counter <= until_subject:
         print "Loading ", counter
         retr[counter] = read_subject_all(counter, scale, datashape, datatype)
         counter += 1
