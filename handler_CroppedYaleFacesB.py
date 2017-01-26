@@ -24,6 +24,8 @@ import numpy as np
 from skimage import img_as_float, img_as_int
 from skimage.transform import rescale
 
+# Get basepath such that only relatives paths matter from this folder on
+basepath = os.path.dirname(os.path.realpath(__file__))
 
 def read_single(nr_subject, first_angle, second_angle, scale=1.0,
                 datatype="float"):
@@ -75,7 +77,7 @@ def read_single(nr_subject, first_angle, second_angle, scale=1.0,
         second_angle = "-{0}".format(str(second_angle)[1:].zfill(2))
     else:
         second_angle = "+{0}".format(str(second_angle).zfill(2))
-    loadstr = "CroppedYaleFaces/yaleB{0}/yaleB{0}_P00A{1}E{2}.pgm".format(
+    loadstr = basepath+"/CroppedYaleFaces/yaleB{0}/yaleB{0}_P00A{1}E{2}.pgm".format(
         nr_subject, first_angle, second_angle)
     return read_single_filename(loadstr, scale, datatype)
 
@@ -154,7 +156,7 @@ def read_ambient(nr_subject, scale=1.0, datatype="float"):
     as numpy array.
     """
     nr_subject = str(nr_subject).zfill(2)
-    loadstr = "CroppedYaleFaces/yaleB{0}/yaleB{0}_P00_Ambient.pgm".format(
+    loadstr = basepath+"/CroppedYaleFaces/yaleB{0}/yaleB{0}_P00_Ambient.pgm".format(
         nr_subject)
     with open(loadstr) as f:
         data = np.array(read_pgm(f)).astype('int16')
@@ -201,7 +203,7 @@ def read_subject_all(nr_subject, scale=1.0, datashape="columns",
             # to subject 1
     """
     nr_subject = str(nr_subject).zfill(2)
-    files = glob.glob('CroppedYaleFaces/yaleB{0}/*.pgm'.format(nr_subject))
+    files = glob.glob(basepath+'/CroppedYaleFaces/yaleB{0}/*.pgm'.format(nr_subject))
     # Remove ambient image
     files = [item for item in files if "Ambient" not in item]
     # Get first image for extracting data format
@@ -257,7 +259,7 @@ def read_all(scale=1.0, datashape="columns", datatype="float"):
     retr = {}
     counter = 1
     print "Loading database..."
-    while os.path.isdir("CroppedYaleFaces/yaleB{0}".format(str(counter).zfill(2))):
+    while os.path.isdir(basepath+"/CroppedYaleFaces/yaleB{0}".format(str(counter).zfill(2))):
         print "Loading ", counter
         retr[counter] = read_subject_all(counter, scale, datashape, datatype)
         counter += 1
