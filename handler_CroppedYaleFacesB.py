@@ -195,9 +195,7 @@ def read_subject_all(nr_subject, scale=1.0, datashape="columns",
     Returns the data object containing all images of the respective subject.
     Note that the ambient image of the database is left out. Moreover, the
     representation/shape of the returned object depends on the chosen datashape.
-    Moreover, returns the image format ie. a tuple with (pixel_x, pixel_y) to
-    be able to recover the image from columnvectors.
-    
+
     Example
     -------------
     In [3]: data = read_subject_all(1, datashape = "columns", datatype = "float")
@@ -210,8 +208,6 @@ def read_subject_all(nr_subject, scale=1.0, datashape="columns",
     files = [item for item in files if "Ambient" not in item]
     # Get first image for extracting data format
     I = read_single_filename(files[0], scale, datatype)
-    # Get image format
-    image_format = I.shape
     if datashape == "matrices":
         data = np.zeros((len(files), I.shape[0], I.shape[1]))
         for i, fn in enumerate(files):
@@ -220,7 +216,7 @@ def read_subject_all(nr_subject, scale=1.0, datashape="columns",
         data = np.zeros((I.shape[0] * I.shape[1], len(files)))
         for i, fn in enumerate(files):
             data[:, i] = read_single_filename(fn, scale, datatype).ravel()
-    return data, image_format
+    return data
 
 
 def read_all(scale=1.0, datashape="columns", datatype="float",
@@ -268,13 +264,36 @@ def read_all(scale=1.0, datashape="columns", datatype="float",
     """
     retr = {}
     counter = 1
+    subject_dirs = [item for item in os.listdir(basepath+"/CroppedYaleFaces/")
+                        if item[0:4] == 'yale']
     print "Loading database..."
-    while os.path.isdir(basepath+"/CroppedYaleFaces/yaleB{0}".format(
-            str(counter).zfill(2))) and counter <= until_subject:
-        print "Loading ", counter
-        retr[counter] = read_subject_all(counter, scale, datashape, datatype)
+    while len(subject_dirs) > 0 and counter <= until_subject:
+        if os.path.isdir(basepath+"/CroppedYaleFaces/yaleB{0}".format(
+                str(counter).zfill(2))):
+            retr[counter] = read_subject_all(counter, scale, datashape,
+                                             datatype)
+            subject_dirs.remove("yaleB{0}".format(str(counter).zfill(2)))
+            print "Loading data ", counter
         counter += 1
     return retr
+
+def get_image_format_for_scale(scale=1.0):
+    """ Function to get the image shape. Uses the image
+    CroppedYaleFaces/yaleB01/yaleB01_P00A-070E+00.pgm, loads this for the given
+    scale and returns its dimensionalities.
+
+    Parameters
+    -------------
+    scale : Float in (0, 1)
+        Float value passed to skimage.scale to rescale the images to a smaller
+        size if desired.
+
+    Returns
+    ------------
+    Shape of the image at the given scale.
+    """
+    img = read_single(1, -70, 0, scale)
+    return img.shape
 
 
 def read_pgm(pgmf):
