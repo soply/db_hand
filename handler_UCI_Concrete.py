@@ -42,8 +42,13 @@ References
     No. 12, pp. 1797-1808 (1998).
 
 """
+import os
 import numpy as np
 import pandas as pd
+
+
+# Get basepath such that only relatives paths matter from this folder on
+basepath = os.path.dirname(os.path.realpath(__file__))
 
 
 def read_all(return_type = 'np'):
@@ -66,7 +71,7 @@ def read_all(return_type = 'np'):
     column. Else it is a pandas dataframe with the descriptors given in the
     excel sheet.
     """
-    data = pd.read_excel('UCI_Concrete/Concrete_Data.xls')
+    data = pd.read_excel(basepath + '/UCI_Concrete/Concrete_Data.xls')
     if return_type == 'np':
         return data.as_matrix()
     elif return_type == 'pd':
