@@ -93,13 +93,13 @@ __idx_numerical_features__ = [
 
 # All real features/intuively good features
 __idx_intuitive_features__ = [
-    'MSSubClass',
+    #'MSSubClass', Actually categorical according to description, type of house
     #'LotFrontage', # Has some NA values
     'LotArea',
     'OverallQual',
     'OverallCond',
     'YearBuilt',
-    'YearRemodAdd',
+    # 'YearRemodAdd', # Doesn't seem to have large influence
     # 'MasVnrArea', # Has some NA values
     # 'BsmtFinSF1',
     # 'BsmtFinSF2',
@@ -128,7 +128,7 @@ __idx_intuitive_features__ = [
     # 'PoolArea',
     # 'MiscVal',
     # 'MoSold',
-    'YrSold',
+    # 'YrSold', # Inspection shows it's not really related to the sales price
     'SalePrice'
 ]
 
@@ -176,7 +176,6 @@ def read_all(return_type = 'np', scaling = 'None',
     elif feature_subset == 'intuitive':
         data = data[__idx_intuitive_features__]
     cols = data.columns.tolist()
-    import pdb; pdb.set_trace()
     if scaling == 'MinMax':
         minmaxscaler = MinMaxScaler(feature_range=(-1, 1))
         data[cols[:-1]] = minmaxscaler.fit_transform(data[cols[:-1]])
