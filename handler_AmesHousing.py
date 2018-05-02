@@ -94,13 +94,13 @@ __idx_numerical_features__ = [
 # All real features/intuively good features
 __idx_intuitive_features__ = [
     'MSSubClass',
-    'LotFrontage', # Has some NA values
+    #'LotFrontage', # Has some NA values
     'LotArea',
     'OverallQual',
     'OverallCond',
     'YearBuilt',
     'YearRemodAdd',
-    'MasVnrArea',
+    # 'MasVnrArea', # Has some NA values
     # 'BsmtFinSF1',
     # 'BsmtFinSF2',
     # 'BsmtUnfSF',
@@ -117,7 +117,7 @@ __idx_intuitive_features__ = [
     # 'KitchenAbvGr',
     # 'TotRmsAbvGrd', # Discrete number
     # 'Fireplaces',
-    'GarageYrBlt',
+    # 'GarageYrBlt', # Has some NA values
     #'GarageCars',
     'GarageArea',
     # 'WoodDeckSF', # Exclude these for simplicity at the moment
@@ -175,12 +175,13 @@ def read_all(return_type = 'np', scaling = 'None',
         data = data[__idx_numerical_features__]
     elif feature_subset == 'intuitive':
         data = data[__idx_intuitive_features__]
-
+    cols = data.columns.tolist()
+    import pdb; pdb.set_trace()
     if scaling == 'MinMax':
         minmaxscaler = MinMaxScaler(feature_range=(-1, 1))
-        data[:,:-1] = minmaxscaler.fit_transform(data[:,:-1])
+        data[cols[:-1]] = minmaxscaler.fit_transform(data[cols[:-1]])
     elif scaling == 'MeanVar':
-        data[:,:-1] = scale(data[:,:-1])
+        data[cols[:-1]] = scale(data[cols[:-1]])
     if return_type == 'np':
         return data.as_matrix()
     else:
