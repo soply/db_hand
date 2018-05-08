@@ -30,12 +30,13 @@ References
 import os
 import numpy as np
 import pandas as pd
+from sklearn.preprocessing import MinMaxScaler, scale
 
 # Get basepath such that only relatives paths matter from this folder on
 basepath = os.path.dirname(os.path.realpath(__file__))
 
 
-def read_all(return_type = 'np'):
+def read_all(return_type = 'np', scaling = 'None'):
     """
     Reads the complete excel sheet and returns it as a 2D Numpy Array or pandas
     DataFrame. If 2D Numpy Array is chosen as return type, the alleged Y
@@ -47,6 +48,8 @@ def read_all(return_type = 'np'):
         Datatype of return object. If 'np', data is returned as a 2D numpy array.
         If 'pd', data is returned as a 2D DataFrame
 
+    scaling : string 'MinMax', 'MeanVar', or 'None'
+        Determines the column-wise scaling of the data.
 
     Returns
     -------------
@@ -62,6 +65,11 @@ def read_all(return_type = 'np'):
     cols = data.columns.tolist()
     cols = cols[1:] + [cols[0]]
     data = data[cols]
+    if scaling == 'MinMax':
+        minmaxscaler = MinMaxScaler(feature_range=(-1, 1))
+        data[cols[:-1]] = minmaxscaler.fit_transform(data[cols[:-1]])
+    elif scaling == 'MeanVar':
+        data[cols[:-1]] = scale(data[cols[:-1]])
     if return_type == 'np':
         return data.as_matrix()
     elif return_type == 'pd':
