@@ -58,7 +58,7 @@ from sklearn.preprocessing import MinMaxScaler, scale
 basepath = os.path.dirname(os.path.realpath(__file__))
 
 
-def read_all(return_type = 'np', scaling = 'None'):
+def read_all(return_type = 'np', scaling = 'None', wine_color = 'red'):
     """
     Reads the complete excel sheet and returns it as a 2D Numpy Array or pandas
     DataFrame. If 2D Numpy Array is chosen as return type, the alleged Y
@@ -73,6 +73,10 @@ def read_all(return_type = 'np', scaling = 'None'):
     scaling : string 'MinMax', 'MeanVar', or 'None'
         Determines the column-wise scaling of the data.
 
+    wine_color : string 'red' or 'white'
+        Decides upon which data set is loaded, i.e. red wine data set, or white
+        wine data set.
+        
     Returns
     -------------
     Returns the data object containing the entire excel sheet. If return_type is
@@ -80,11 +84,12 @@ def read_all(return_type = 'np', scaling = 'None'):
     column. Else it is a pandas dataframe with the descriptors given in the
     excel sheet.
     """
-    data1 = pd.read_excel(basepath + '/UCI_WineQuality/WineQuality-white.xlsx',
-                        header = [1])
-    data2 = pd.read_excel(basepath + '/UCI_WineQuality/winequality-red.xlsx',
-                          header = [1])
-    data = pd.concat([data1, data2])
+    if wine_color == 'red':
+        data = pd.read_excel(basepath + '/UCI_WineQuality/winequality-red.xlsx',
+                              header = [1])
+    elif wine_color == 'white':
+        data = pd.read_excel(basepath + '/UCI_WineQuality/WineQuality-white.xlsx',
+                            header = [1])
     cols = data.columns.tolist()
     if scaling == 'MinMax':
         minmaxscaler = MinMaxScaler(feature_range=(-1, 1))
