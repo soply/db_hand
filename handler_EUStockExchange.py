@@ -32,10 +32,6 @@ from sklearn.preprocessing import MinMaxScaler, scale
 # Get basepath such that only relatives paths matter from this folder on
 basepath = os.path.dirname(os.path.realpath(__file__))
 
-__NAN_rows__ = [5,6,10,11,25,26,27,32,33,34,35,36,37,39,42,43,45,46,52,53,54,55,
-                56,57,58,59,60,61,65,72,75,83,84,96,97,98,102,103,107,115,119,
-                150]
-
 def read_all(return_type = 'np', scaling = 'None'):
     """
     Reads the complete excel sheet and returns it as a 2D Numpy Array or pandas
@@ -58,8 +54,7 @@ def read_all(return_type = 'np', scaling = 'None'):
     column. Else it is a pandas dataframe with the descriptors given in the
     excel sheet.
     """
-    data = pd.read_csv(basepath + '/EuropeStockExchange/EuStockMarkets.csv', sep=',',
-                        skiprows = __NAN_rows__)
+    data = pd.read_csv(basepath + '/EuropeStockExchange/EuStockMarkets.csv', sep=',')
     # Updated columns
     cols = data.columns.tolist()
     # Rearange cols
