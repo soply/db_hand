@@ -58,7 +58,7 @@ basepath = os.path.dirname(os.path.realpath(__file__))
 __exclude_features__ = [
     'GameID',
     'LeagueIndex', # Categorical 1-8 (could be predicted though)
-    'TotalHours' # Very related to APM according to SAVE
+    # 'TotalHours' # Very related to APM according to SAVE
 ]
 
 def read_all(return_type = 'np', scaling = 'None', to_predict = 'APM'):
