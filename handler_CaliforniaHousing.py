@@ -108,6 +108,6 @@ def read_all(return_type = 'np', scaling = 'None', feature_adjustment = True):
     elif scaling == 'MeanVar':
         data[cols[:-1]] = scale(data[cols[:-1]])
     if return_type == 'np':
-        return data.as_matrix()
+        return data.values
     else:
         raise RuntimeError("Choose return_type = 'np' to read data.")

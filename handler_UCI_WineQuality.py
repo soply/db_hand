@@ -76,7 +76,7 @@ def read_all(return_type = 'np', scaling = 'None', wine_color = 'red'):
     wine_color : string 'red' or 'white'
         Decides upon which data set is loaded, i.e. red wine data set, or white
         wine data set.
-        
+
     Returns
     -------------
     Returns the data object containing the entire excel sheet. If return_type is
@@ -97,7 +97,7 @@ def read_all(return_type = 'np', scaling = 'None', wine_color = 'red'):
     elif scaling == 'MeanVar':
         data[cols[:-1]] = scale(data[cols[:-1]])
     if return_type == 'np':
-        return data.as_matrix()
+        return data.values
     elif return_type == 'pd':
         return data
     else:

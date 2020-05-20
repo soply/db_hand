@@ -70,7 +70,7 @@ def read_all(return_type = 'np', scaling = 'None'):
 
     scaling : string 'MinMax', 'MeanVar', or 'None'
         Determines the column-wise scaling of the data.
-        
+
     Returns
     -------------
     Returns the data object containing the entire excel sheet. If return_type is
@@ -87,7 +87,7 @@ def read_all(return_type = 'np', scaling = 'None'):
     elif scaling == 'MeanVar':
         data[cols[:-1]] = scale(data[cols[:-1]])
     if return_type == 'np':
-        return data.as_matrix()
+        return data.values
     elif return_type == 'pd':
         return data
     else:
